@@ -1,0 +1,310 @@
+---
+title: "Data management workshop 4/17"
+author: "Keana Richards"
+date: "April 17, 2019"
+output: 
+  html_document: 
+    theme: cerulean
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    number_sections: TRUE
+---
+
+# Introduction
+
+Hi everyone, my name is Keana, a second year grad student working with Coren Apicella. For my research, I focus on factors that may affect gender differences in willingness to compete. If you'd like to hear more about my work (I'm more than happy to talk about it!), feel free to talk to me after this workshop or shoot me an email. Today, I'll be leading you through a workshop on data management today, which will mainly focus on data cleaning, arguably the most time-consuming part of analyzing your data. 
+
+# R background
+
+I started learning R in my last year of undergrad (so it was spring/summer of 2017). I first tried using datacamp and swirl to learn how to use it. But it's harder to really force yourself unless you're working with real data, so I'd recommend either taking a class (where you are forced to do homework and projects regularly - there are some good courses in the statistics department that I have been taking) or just forcing yourself to completely analyze your data in R (without any help from Excel). I did this and I learned so much faster - you will have to be patient with this, warning in advance. 
+
+
+# Review
+
+Before we get started on writing our code for today's session, I want to really quickly review what you learned last week during the intro to R workshop. Does anyone have any specific questions about any of these concepts they would like for me to address? For each of these, please feel free to shout out any questions that come to your mind. 
+
+- directories
+- workspace
+- scripts
+- the save button
+- installing packages
+- basic r syntax
+    - operations
+    - organizing/interacting with your data
+- basic analyses
+- 1 ggplot example 
+
+
+  So one thing I think is really important for trying to work in R is being familiar with the R environment. So I'll quickly refresh your memory on some important parts of the display here. By default, on the left hand side of the screen, we have two separate sections. The top box is where you can write and save your script for later use. Note: you can still run the code and get output up here, it's just that you're code will also be saved. In the bottom box, you can run code and get output, but it will not save. So my personal recommendation is to always write in the top box and save your script at regular intervals. 
+  Next, we have the panels on the right. There are a few tabs, but some are less useful than others:
+  - Top box: you have the environment, which shows all data relevant to your current session (any data related to your code you have written). It essentially keeps a running tab of anything you've created. I mainly look at it to see what datasets I should call for my code. The other tabs aren't really as useful for us today - so I'm going to skip them
+  - Bottom box: this has a few options - I think the most relevant things for you are the help tab - where you can look up specific functions and get some of the arguments for it (for instance, let's look at the mean function in here and some of its arguments). The arguments are essentially features of the function you can change that will give you more flexibility. For instance, to calculate the mean for a column with NA values, you should set na.rm = TRUE when you are calling the mean() function. The Plots tab is where your plots populate automatically. You also have the option to install/update packages in this part of the display using the Packages tab. Another relevant tab is the files tab, which shows you your current working directory and the associated files - there are some options under the tab to make any changes you want to your wd directly from the R environment. 
+  
+  
+Any questions? 
+  
+Alright so let's review one other thing that I definitely found confusing when I first started learning R: graphing with ggplot
+
+```{r}
+library(ggplot2)
+graph<- ggplot(data=iris, aes(x = Sepal.Length, y = Sepal.Width)) 
+## what does this "graph" look like before we add anything else? 
+graph
+## essentially a template for us to add the data and any other settings we want to set. You NEED to do this everytime. Then you add on to it (literally, by using addition symbol). But you need a basic structure on which to build (think of it like building the foundation of a house and adding on to that). Can't build without the foundation though.
+
+## first we have to tell it we want a scatterplot. 
+
+graph + geom_point()
+
+### Seems like there's some separation here, as if there's two different groups that have different slopes etc. Do you remember what groups we defined last time that seemed to be driving this separation? 
+
+## Species! Let's add to our graph a setting that differentiates between species based on color AND shape.
+
+graph + geom_point(aes(color=Species, shape=Species))
+
+## so here, each species has a unique color and shape. We could also just use color as their identifiers in the key: 
+
+graph + geom_point(aes(color=Species))
+
+## Now we just have a unique color for all of them, but they share the same shape (it looks like the default shape is a circle, but you should be able to change that in the arguments for this function if you have a preference for another shape)
+
+
+## One other thing we did was add axis labels and a title, like so:
+
+
+graph +   xlab("Sepal Length") +  ylab("Sepal Width") +
+  ggtitle("Sepal Length-Width") 
+
+### mention saving a graph here: notice how it got rid of the point, even though it changed the title and axis labels. Does anyone know why?
+
+
+
+## finally, there are themes in R that you can use that just make formatting much easier - you can just set it so if you're a person like me who doesn't know anything about aesthetics etc, you don't have to think too hard. So let's tack on a theme and put it all together. 
+
+graph +  theme_minimal()+ geom_point(aes(color=Species, shape=Species)) + xlab("Sepal Length") +  ylab("Sepal Width") +
+  ggtitle("Sepal Length-Width") 
+
+## any questions? 
+
+```
+
+# Post-review 
+
+
+Today we're going to pretend as though you are about to run your study. I think this is the most important part of your research, if you get this right, you can save a lot of time and pain once your data comes in. 
+
+# Data analysis plan
+
+Before collecting data, I suggest writing a data analysis plan. Here's an <a href=file:///C:/Users/keana/OneDrive%20-%20PennO365/Comp_transfer2018/Penn/second_yr/analysis_plan_study1.pdf>an example</a> from my own research. In it, you will list out every step you will take (minus the code you will use). This will allow you to optimize all of your procedures BEFORE you collect your data, which will make it much easier to analyze it later. I have found this especially helpful when I am working on Qualtrics and need to know in advance how I want my data to be formatted so I can easily import it into R without too much data cleaning (but you will usually have to clean it up a bit, regardless). This will help you in writing your pre-registration, which I will show you how to create!
+
+
+# Open science framework and preregistration
+
+As you may know, several scientific fields are going through a replication crisis, including psychology. Several well-known psychological findings are coming under scrutiny largely because of the discovery of p-hacking ie. the selective reporting of statistically significant analyses and other less than scientific practices. 
+    
+    
+Pre-registration of one's studies has been proposed to help reduce the prevalence of p-hacking, largely because it is attributed to poor planning/unclear predictions. I can attest to this myself, as a person who has run studies before I knew about pre-registration and after pre-registering my study. Pre-registration is extremely useful to clarify *exactly* what your predictions are and your purposes for running the study. So I think it's overall a win-win situation. I'll quickly walk you through the pre-registration process. 
+
+- Go to the [open science framework website](https://osf.io) 
+- Create an account
+- Create project, I would keep it private until you've collected, but that's a personal preference. 
+- Once project is created, click drop down menu - registration 
+    - As it says, you cannot edit or delete your registration, which is the whole point here - we want to make it clear what their original predictions/analysis plans were. 
+    - There are several options here, they are equally fine. You can just do whatever works for you. Here's an idea of what it might look like.
+- [This site](http://datacolada.org/64) provides clear examples of do's and don'ts for pre-registration.  
+
+
+# Getting data shared by others and analyzing it
+
+This is pretty straightforward, you go to OSF and click the search button, type in whatever topic or author you are interested in. For instance, when I type in voice pitch, the first entry that populates is Dr. Apicella's work with grad student Kris conducted a couple of years ago. You can see the files on the landing page right away. If they have code available, it will usually be here. You can then click on it and copy or download it straight from there. One thing you'll notice here that is super important for you to do when writing code (not only for your sake but for the sake of others who may want to replicate your analyses) is that he includes comments for every step, making it really easy to follow. 
+
+Alright now that you've pre-registered your data, have a data analysis plan, and *hopefully* have IRB approval, we can get onto the fun part - data collection and analysis! 
+
+
+# Steps after collecting your data
+
+- Create a designated folder and make a clear file naming scheme - this would be explicitly written in your data analysis plan
+    - If you are sharing your data with others, do the same in Penn + Box/Drive/Dropbox - whatever you're using. 
+- Another tip: don't overwrite any files - unless you are using something like Penn+Box which keeps track of the changes you've made. Otherwise, it's hard to reverse any changes you've made to any documents you made. I would create a separate file simply listing all of the file names you have associated with a specific project and the changes you made to them. 
+    - This may seem tedious now, but it's so valuable when you are trying to remember what you did several months out, it will save a lot of time.
+- Another great option that we don't have time to get into here is [Github](https://github.com/), which keeps track of your changes for you! 
+
+# Cleaning data
+
+```{r}
+
+#install.packages("dplyr")
+library(dplyr)
+#install.packages("magrittr")
+library(magrittr)
+
+```
+
+
+Note: adapted from STAT705 at Penn - highly recommend checking this class out if possible!
+
+I'll be using popular packages called dplyr and magrittr for some of these examples, which is very useful for making it much easier and more efficient to change/manipulate your data. 
+
+dplyr and magrittr are different packages but they are most useful when used together. The key idea is to decompose R commands into sequential actions. The result of one action is piped into the next action by the %>% command. The key actions or verbs are: 
+
+- Select: select columns of data frame
+- Filter: select rows matching criteria that you set
+- Arrange: sort rows by their values (e.g., from highest to lowest and vice versa)
+- Mutate: create new columns based on changes you want to make to other columns
+- Summarise: reduce data to single number, i.e. mean, sd, etc.
+- group_by: perform operations or summarise by subset/group (split, apply, combine)
+
+
+We are going to use the movies dataset from kaggle.com. I sent it to you by email, so go ahead and load it. 
+We have the variables such as ```budget```, ```revenue```, ```runtime``` (in minutes), ```title```. We also have ```vote_count``` and ```vote_average``` which reflect user votes on the website. The variable ```popularity``` is a number computed by TMDB whose formula is unknown. And finally, we have a series of genre indicators giving us the genre(s) of the movies. 
+
+Note: you'll need to change the directory below to reflect the location of the movies dataset on your computer and your current system. An option for not having to remember all of the directories/subdirectories is to use the here package in combination with R Projects. Here are some great links that helped me learn about the here package: 
+
+- https://malco.io/2018/11/05/why-should-i-use-the-here-package-when-i-m-already-using-projects/
+- http://jenrichmond.rbind.io/post/how-to-use-the-here-package/
+- https://github.com/jennybc/here_here
+
+
+```{r}
+
+
+movies <- read.csv("C:/Users/keana/Downloads/movies.csv", stringsAsFactors = T)
+
+```
+
+
+Some basic examples
+
+
+Select:
+```{r}
+
+movies1 <- movies %>% select(c(title, budget, runtime, revenue))
+View(movies1)
+```
+
+Filter:
+
+```{r}
+movies2 <- movies %>% filter(Adventure==1 & Action==1) %>% 
+                select(c(title, budget, runtime, revenue))
+View(movies2)
+```
+
+Arrange (low to high): 
+
+```{r}
+movies3 <- movies %>% filter(Adventure==1 & Action==1) %>% 
+                select(c(title, budget, runtime, revenue)) %>% arrange(budget)
+View(movies3)
+```
+
+
+Arrange (high to low):
+
+```{r, eval = F}
+
+movies4 <- movies %>% filter(Adventure==1 & Action==1) %>% 
+                select(c(title, budget, runtime, revenue)) %>% arrange(desc(budget))
+View(movies4)
+
+```
+
+
+
+Mutate:
+```{r}
+movies5 <- movies %>% filter(Adventure==1 & Action==1) %>% 
+                select(c(title, budget, runtime, revenue)) %>% arrange(desc(budget)) %>% mutate(efficiency = budget/revenue)
+
+View (movies5)
+```
+
+
+Summarise:
+
+```{r}
+
+## show error message with this and explain why:
+
+movies %>% filter(Adventure==1 & Action==1) %>% 
+                select(c(title, budget, runtime, revenue)) %>% arrange(desc(budget)) %>% mutate(efficiency = budget/revenue) %>% summarise(mean = mean(efficiency))
+
+### adjustments to avoid error:
+
+
+movies %>% filter(Adventure==1 & Action==1) %>% 
+                select(c(title, budget, runtime, revenue)) %>% arrange(desc(budget)) %>% mutate(efficiency = budget/revenue) %>% filter (efficiency != Inf |!is.na(efficiency)) %>% summarise(mean = mean(efficiency))
+```
+
+group_by:
+
+```{r}
+summarise(group_by(movies, original_language), mean(popularity))
+
+```
+
+
+Other potentially useful functions!
+
+
+```{r, results='hide'}
+recode(movies$original_language, en = "English")
+
+## or with numbers
+
+recode(movies$original_language, en = 1L, es = 2L, zh = 3L, de = 4L)
+
+###just make sure to recode all of them so it doesn't replace all of them with NAs
+
+
+```
+
+
+
+* Rename the columns of a data frame:
+
+```{r}
+
+movies <- dplyr::rename(movies, pop = popularity)
+
+
+##why the "dplyr::"? what happens if I remove that at the front?
+
+```
+
+* Select all columns except overview
+
+```{r}
+
+movies <- dplyr::select(movies, -overview)
+```
+
+* Remove duplicate rows
+
+```{r, results='hide'}
+
+movies <- distinct(movies)
+```
+
+* Apply summary function to each column
+```{r, warning=F}
+
+summarise_all(movies, funs(mean))
+
+```
+
+* To add an observation:
+
+```{r, results='hide'}
+library(dplyr)
+movies <- add_row(movies, budget= 1, id = 1)
+View(movies)
+```
+
+
+# Resources for learning more about R:
+- Help tab of R - has several cheat sheets you can check out!!!!! 
+
+
