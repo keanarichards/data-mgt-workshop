@@ -96,7 +96,7 @@ Today we're going to pretend as though you are about to run your study. I think 
 
 # Data analysis plan
 
-Before collecting data, I suggest writing a data analysis plan. Here's an <a href=file:///C:/Users/keana/OneDrive%20-%20PennO365/Comp_transfer2018/Penn/second_yr/analysis_plan_study1.pdf>an example</a> from my own research. In it, you will list out every step you will take (minus the code you will use). This will allow you to optimize all of your procedures BEFORE you collect your data, which will make it much easier to analyze it later. I have found this especially helpful when I am working on Qualtrics and need to know in advance how I want my data to be formatted so I can easily import it into R without too much data cleaning (but you will usually have to clean it up a bit, regardless). This will help you in writing your pre-registration, which I will show you how to create!
+Before collecting data, I suggest writing a data analysis plan. Here's [an example](https://github.com/keanarichards/data-mgt-workshop/blob/master/analysis_plan_study1.pdf) from my own research. In it, you will list out every step you will take (minus the code you will use). This will allow you to optimize all of your procedures BEFORE you collect your data, which will make it much easier to analyze it later. I have found this especially helpful when I am working on Qualtrics and need to know in advance how I want my data to be formatted so I can easily import it into R without too much data cleaning (but you will usually have to clean it up a bit, regardless). This will help you in writing your pre-registration, which I will show you how to create!
 
 
 # Open science framework and preregistration
